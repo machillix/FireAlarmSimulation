@@ -31,6 +31,9 @@ using UnityEngine;
 
 public class Fire : MonoBehaviour
 {
+
+
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -57,10 +60,16 @@ public class Fire : MonoBehaviour
 
     private void StartFireSimulation()
     {
-
+        InvokeRepeating("DoSimulation",SimulationManager.SimulationInterval,
+            SimulationManager.SimulationInterval);
     }
 
     private void StopFireSimulation()
+    {
+        CancelInvoke();
+    }
+
+    private void DoSimulation()
     {
 
     }

@@ -36,6 +36,16 @@ public class SimulationManager : MonoBehaviour
     public static event Action StartSimulation;
     public static event Action StopSimulation;
 
+    [SerializeField]private static float simulationInterval = 2f;
+
+    public static float SimulationInterval
+    {
+        get
+        {
+            return simulationInterval;
+        }
+    }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
