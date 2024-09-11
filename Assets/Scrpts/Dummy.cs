@@ -63,7 +63,7 @@ public class Dummy : MonoBehaviour
 
     void Update()
     {
-        if(!isRunning)return;
+        /*if(!isRunning)return;
 
         if(!agent.pathPending && (agent.remainingDistance <= agent.stoppingDistance))
         {
@@ -86,7 +86,7 @@ public class Dummy : MonoBehaviour
         }
 
     // Update the last position for the next frame's comparison
-        lastPosition = transform.position;
+        lastPosition = transform.position;*/
     }
 
 
@@ -132,7 +132,6 @@ public class Dummy : MonoBehaviour
 
             }
         }
-
         agent.SetDestination(closest.transform.position);
 
     }
