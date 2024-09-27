@@ -1,55 +1,36 @@
-/******************************************************************************
-* File         : Fire.cs
-* Authors      : Toni Westerlund (MaChilli/machillix)
-* Lisence      : MIT Licence
-* Copyright    : Toni Westerlund (MaChilli/machillix)
-* 
-* MIT License
-* 
-* Copyright (c) 2024 Toni Westerlund (MaChilli/machillix)
-* 
-* Permission is hereby granted, free of charge, to any person obtaining a copy
-* of this software and associated documentation files (the "Software"), to deal
-* in the Software without restriction, including without limitation the rights
-* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-* copies of the Software, and to permit persons to whom the Software is
-* furnished to do so, subject to the following conditions:
-* 
-* The above copyright notice and this permission notice shall be included in all
-* copies or substantial portions of the Software.
-* 
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-* SOFTWARE.
-*****************************************************************************/
-
 using UnityEngine;
 
 public class Fire : MonoBehaviour
 {
 
+    [SerializeField]public GameObject fire;
+    [SerializeField]private int fireDistance = 1; 
+    private bool isRunning = false;
 
+
+    private Vector3[] directions = {
+        Vector3.forward,
+        Vector3.back,
+        Vector3.left,
+        Vector3.right
+    };
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
     void OnEnable()
     {
-        SimulationManager.StartSimulation += StartFireSimulation;
-        SimulationManager.StopSimulation += StopFireSimulation;
+        SimulationManager.StartSimulation += StartSimulation;
+        SimulationManager.StopSimulation += StopSimulation;
     }
 
     void OnDisable()
     {
-        SimulationManager.StartSimulation -= StartFireSimulation;
-        SimulationManager.StopSimulation -= StopFireSimulation;
+        SimulationManager.StartSimulation -= StartSimulation;
+        SimulationManager.StopSimulation -= StopSimulation;
+    }
+
+    void Start()
+    {
+        
     }
 
     // Update is called once per frame
@@ -58,19 +39,36 @@ public class Fire : MonoBehaviour
         
     }
 
-    private void StartFireSimulation()
+
+    public void StartSimulation()
     {
-        InvokeRepeating("DoSimulation",SimulationManager.SimulationInterval,
-            SimulationManager.SimulationInterval);
+        isRunning = true;
+        InvokeRepeating("FireSphread", SimulationManager.SimulationInterval, SimulationManager.SimulationInterval);
     }
 
-    private void StopFireSimulation()
+
+    private void StopSimulation()
     {
-        CancelInvoke();
+        isRunning = false;
     }
 
-    private void DoSimulation()
+    public void FireSphread()
     {
+        foreach (Vector3 direction in directions)
+        {
+            RaycastHit hit;
+            if (!Physics.Raycast(transform.position, direction, out hit, fireDistance))
+            {
+                Vector3 newPosition = transform.position + (direction * fireDistance);
 
+                GameObject newObject = Instantiate(fire, newPosition, Quaternion.identity);
+
+                newObject.GetComponent<Fire>().StartSimulation();
+
+
+                
+            }
+        }
     }
+
 }
